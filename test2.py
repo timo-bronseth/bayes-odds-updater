@@ -7,9 +7,6 @@
 my_list = range(100)
 
 
-def my_generator():
-    n =
-    yield n :=
 
 my_set = [x*2 for x in iter(my_list)]
 
