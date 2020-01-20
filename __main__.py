@@ -24,44 +24,48 @@ def _cast_odds_as_lists_of_floats(args: list) -> list:
     Uses nested list comprehension btw!
     """
 
-    args = [[float(sentence.strip()) if _is_floatifiable(sentence) else sentence.strip()
-             for sentence in arg.split(':')]
+    args = [[float(item.strip()) if _is_floatifiable(item) else item.strip()
+             for item in arg.split(':')]
             for arg in args]  # Nested list comprehension!
 
     return list(args)
 
 
-def print_bayes_update(prior_beliefs: list,
+def print_bayes_update(prior_odds: list,
                        likelihood_ratios: list,
-                       belief_names: list,
+                       hypotheses: list,
                        evidence_name: str,
-                       posterior_beliefs: list) -> None:
+                       posterior_odds: list,
+                       tab_size: int = 20) -> None:
     """Prints the prettified updates to console."""
 
-    # TODO: Finish this
-    print(dedent(f"""
-                    \t\t priors \t\t likelihood ratios \t\t posteriors
-                    {belief_names[0]} \t\t {likelihood_ratios[0]} \t\t {posterior_beliefs[0]}
-                    
-                 """))
+    print("\tprior odds\tlikelihood ratios\tposterior odds\tposterior probabilities".expandtabs(tab_size))
+
+    for index, hypothesis in enumerate(hypotheses):
+        print((fill(
+              f"{hypothesis}", width=tab_size) + "\t").expandtabs(tab_size) +
+              f"{prior_odds[index]} \t".expandtabs(tab_size) +
+              f"{likelihood_ratios[index]} \t".expandtabs(tab_size) +
+              f"{posterior_odds[index]} \t".expandtabs(tab_size) +
+              f"{100 * posterior_odds[index] / sum(posterior_odds)} %".expandtabs(tab_size))
 
 
-def bayes_update(prior_beliefs: list,
+def bayes_update(prior_odds: list,
                  likelihood_ratios: list,
-                 belief_names: list,
+                 hypotheses: list,
                  evidence_name: str) -> tuple:
     """
-    Multiplies vectors of prior beliefs (oods) and likelihood ratios (odds)
+    Multiplies vectors of prior_odds (oods) and likelihood ratios (odds)
     according to Bayes theorem.
     """
 
-    posterior_beliefs = multiply(prior_beliefs, likelihood_ratios)
+    posterior_odds = multiply(prior_odds, likelihood_ratios)
 
-    return prior_beliefs, likelihood_ratios, belief_names, evidence_name, list(posterior_beliefs)
+    return prior_odds, likelihood_ratios, hypotheses, evidence_name, list(posterior_odds)
 
 
 def bayes_query() -> tuple:
-    """Queries the user for their priors and likelihood ratios."""
+    """Queries the user for their prior_odds and likelihood ratios."""
 
     evidence_name = \
         input(dedent("""
@@ -70,38 +74,47 @@ def bayes_query() -> tuple:
 
                         > """))
 
-    belief_names = \
+    hypotheses = \
         input(dedent("""
                         List the names of the beliefs you want to update
-                        (e.g. 'positive effect, no effect, negative effect'):
+                        (e.g. 'positive effect:no effect:negative effect'):
                         
                         > """))
 
-    prior_beliefs = \
+    prior_odds = \
         input(dedent(f"""
                          List your prior odds for the following hypotheses:
                          (e.g. '1:4:2')
-                         {belief_names}:
+
+                         {hypotheses}:
                         
                          > """))
 
     likelihood_ratios = \
         input(fill("List your likelihood ratios for the following hypotheses given the evidence:" +
-                   f"That is, if [{belief_names[0]}] is true, how much more likely would you be to " +
+                   f"That is, if [{hypotheses[0]}] is true, how much more likely would you be to " +
                    f"observe [{evidence_name}] compared to if other hypotheses were true?:", 80) +
               "(e.g. '4:2:0.5')" +
-              f"\n\n{belief_names}:" +
+              f"\n\n{hypotheses}:" +
               "\n\n" +
               " > ")
 
     # Typecast arguments as lists formatted appropriately.
-    args = _cast_odds_as_lists_of_floats([prior_beliefs, likelihood_ratios, belief_names])
-    prior_beliefs, likelihood_ratios, belief_names = args[0], args[1], args[2]  # sad can't use *args here :c
+    args = _cast_odds_as_lists_of_floats([prior_odds, likelihood_ratios, hypotheses])
+    prior_odds, likelihood_ratios, hypotheses = args[0], args[1], args[2]  # sad can't use *args here :c
 
-    return prior_beliefs, likelihood_ratios, belief_names, evidence_name
+    return prior_odds, likelihood_ratios, hypotheses, evidence_name
 
 
 if __name__ == "__main__":
     # Unpack the return values from bayes_query()
     # as arguments into bayes_update().
-    print_bayes_update(*bayes_update(*bayes_query()))
+    # print_bayes_update(*bayes_update(*bayes_query()))
+
+    args = [prior_odds := "1:4:2",
+            likelihood_ratios := "4:1:0.5",
+            hypotheses := "positive effect:no effect:negative effect",
+            evidence_name := "clinical trial"]
+    args = _cast_odds_as_lists_of_floats(args)
+
+    print_bayes_update(*bayes_update(*args))
