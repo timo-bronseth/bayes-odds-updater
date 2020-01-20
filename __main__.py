@@ -6,6 +6,8 @@
 from numpy import multiply
 from textwrap import dedent, fill
 
+# TODO: Import exception handler and deal with input exceptions.
+
 
 def _is_floatifiable(string: str) -> bool:
     """Checks if it's possible to cast a str to float, and returns True if so."""
@@ -47,7 +49,7 @@ def print_bayes_update(prior_odds: list,
               f"{prior_odds[index]} \t".expandtabs(tab_size) +
               f"{likelihood_ratios[index]} \t".expandtabs(tab_size) +
               f"{posterior_odds[index]} \t".expandtabs(tab_size) +
-              f"{100 * posterior_odds[index] / sum(posterior_odds)} %".expandtabs(tab_size))
+              f"{round(100 * posterior_odds[index] / sum(posterior_odds), 1)} %".expandtabs(tab_size))
 
 
 def bayes_update(prior_odds: list,
@@ -76,7 +78,7 @@ def bayes_query() -> tuple:
 
     hypotheses = \
         input(dedent("""
-                        List the names of the beliefs you want to update
+                        List the names of the hypotheses you want to update
                         (e.g. 'positive effect:no effect:negative effect'):
                         
                         > """))
@@ -109,12 +111,12 @@ def bayes_query() -> tuple:
 if __name__ == "__main__":
     # Unpack the return values from bayes_query()
     # as arguments into bayes_update().
-    # print_bayes_update(*bayes_update(*bayes_query()))
+    print_bayes_update(*bayes_update(*bayes_query()))
 
-    args = [prior_odds := "1:4:2",
-            likelihood_ratios := "4:1:0.5",
-            hypotheses := "positive effect:no effect:negative effect",
-            evidence_name := "clinical trial"]
-    args = _cast_odds_as_lists_of_floats(args)
-
-    print_bayes_update(*bayes_update(*args))
+    # Quick
+    # args = [prior_odds := "1:4:2",
+    #         likelihood_ratios := "4:1:0.5",
+    #         hypotheses := "positive effect:no effect:negative effect",
+    #         evidence_name := "clinical trial"]
+    # args = _cast_odds_as_lists_of_floats(args)
+    # print_bayes_update(*bayes_update(*args))
