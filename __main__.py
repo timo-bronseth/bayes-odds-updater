@@ -8,6 +8,7 @@ from textwrap import dedent, fill
 
 
 def _is_floatifiable(string: str) -> bool:
+    """Checks if it's possible to cast a str to float, and returns True if so."""
 
     try:
         float(string)
@@ -37,7 +38,7 @@ def print_bayes_update(prior_beliefs: list,
                        posterior_beliefs: list) -> None:
     """Prints the prettified updates to console."""
 
-    # TODO: Print priors, l_ratios an posteriors. Maybe arrows too. Animations?
+    # TODO: Finish this
     print(dedent(f"""
                     \t\t priors \t\t likelihood ratios \t\t posteriors
                     {belief_names[0]} \t\t {likelihood_ratios[0]} \t\t {posterior_beliefs[0]}
@@ -50,15 +51,11 @@ def bayes_update(prior_beliefs: list,
                  belief_names: list,
                  evidence_name: str) -> tuple:
     """
-    Takes prior beliefs and likelihood ratios, both expressed as
-    dictionaries of odds ratios (h1:odds1, h2:odds2, ...), and uses
-    Bayes theorem to return a dictionary of posterior beliefs.
+    Multiplies vectors of prior beliefs (oods) and likelihood ratios (odds)
+    according to Bayes theorem.
     """
 
-    # TODO: Matrix multiply priors and likelihoods.
     posterior_beliefs = multiply(prior_beliefs, likelihood_ratios)
-
-    # TODO: Combine posteriors with dict of hypothesis names again.
 
     return prior_beliefs, likelihood_ratios, belief_names, evidence_name, list(posterior_beliefs)
 
@@ -97,7 +94,7 @@ def bayes_query() -> tuple:
               "\n\n" +
               " > ")
 
-    # Type cast arguments as lists formatted appropriately.
+    # Typecast arguments as lists formatted appropriately.
     args = _cast_odds_as_lists_of_floats([prior_beliefs, likelihood_ratios, belief_names])
     prior_beliefs, likelihood_ratios, belief_names = args[0], args[1], args[2]  # sad can't use *args here :c
 
