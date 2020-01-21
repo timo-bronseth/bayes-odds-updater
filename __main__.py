@@ -41,7 +41,7 @@ def print_bayes_update(prior_odds: list,
                        tab_size: int = 20) -> None:
     """Prints the prettified updates to console."""
 
-    print("\tprior odds\tlikelihood ratios\tposterior odds\tposterior probabilities".expandtabs(tab_size))
+    print("\n\tprior odds\tlikelihood ratios\tposterior odds\tposterior probabilities".expandtabs(tab_size))
 
     for index, hypothesis in enumerate(hypotheses):
         print((fill(
@@ -88,16 +88,17 @@ def bayes_query() -> tuple:
                          List your prior odds for the following hypotheses:
                          (e.g. '1:4:2')
 
-                         {hypotheses}:
+                         {hypotheses}
                         
                          > """))
 
     likelihood_ratios = \
-        input(fill("List your likelihood ratios for the following hypotheses given the evidence:" +
-                   f"That is, if [{hypotheses[0]}] is true, how much more likely would you be to " +
+        input("\n" +
+              fill("List your likelihood ratios for the following hypotheses given the evidence. " +
+                   f"That is, if [your hypothesis] is true, how much more likely would you be to " +
                    f"observe [{evidence_name}] compared to if other hypotheses were true?:", 80) +
-              "(e.g. '4:2:0.5')" +
-              f"\n\n{hypotheses}:" +
+              "\n(e.g. '4:1:0.5')" +
+              f"\n\n{hypotheses}" +
               "\n\n" +
               " > ")
 
