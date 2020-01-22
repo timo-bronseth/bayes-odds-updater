@@ -6,7 +6,10 @@ For example, given an array of [h1, h2, h3], you query the user:
 > "What are the relative odds of h1:h2?"
 > "What are the relative odds of h2:h3?"
 > "What are the relative odds of h3:h1?"
-et cetera until they get bored.
+et cetera
 
 """
 
+
+class CrossCheck:
+    pass
