@@ -36,7 +36,6 @@ def _cast_odds_as_lists_of_floats(args: list) -> list:
 def print_bayes_update(prior_odds: list,
                        likelihood_ratios: list,
                        hypotheses: list,
-                       evidence_name: str,
                        posterior_odds: list,
                        tab_size: int = 20) -> None:
     """Prints the prettified updates to console."""
@@ -57,59 +56,13 @@ def bayes_update(prior_odds: list,
                  hypotheses: list,
                  evidence_name: str) -> tuple:
     """
-    Multiplies vectors of prior_odds (oods) and likelihood ratios (odds)
+    Multiplies vectors of prior_odds (odds) and likelihood ratios (odds)
     according to Bayes theorem.
     """
 
     posterior_odds = multiply(prior_odds, likelihood_ratios)
 
     return prior_odds, likelihood_ratios, hypotheses, evidence_name, list(posterior_odds)
-
-
-def bayes_crosscheck() -> tuple:
-    """
-    Queries the user for their prior_odds and likelihood ratios,
-    but does so one by one rather than querying user for an array of odds all at once.
-
-    For example, given an array of [h1, h2, h3], you query the user:
-    > "What are the relative odds of h1:h2?"
-    > "What are the relative odds of h2:h3?"
-    > "What are the relative odds of h3:h1?"
-    et cetera.
-    """
-
-    evidence_name = \
-        input(dedent("""
-                        Give a name to the evidence you want to consider
-                        (e.g. 'clinical trial' or 'uncle Joey anecdote'):
-
-                        > """))
-
-    hypotheses = \
-        input(dedent("""
-                        List the names of the hypotheses you want to update
-                        (e.g. 'positive effect:no effect:negative effect'):
-
-                        > """))
-
-    prior_odds = \
-        input(dedent(f"""
-                         List your prior odds for the following hypotheses:
-                         (e.g. '1:4:2')
-
-                         {hypotheses}
-
-                         > """))
-
-    likelihood_ratios = \
-        input("\n" +
-              fill("List your likelihood ratios for the following hypotheses given the evidence. " +
-                   f"That is, if [your hypothesis] is true, how much more likely would you be to " +
-                   f"observe [{evidence_name}] compared to if other hypotheses were true?:", 80) +
-              "\n(e.g. '4:1:0.5')" +
-              f"\n\n{hypotheses}" +
-              "\n\n" +
-              " > ")
 
 
 def bayes_query() -> tuple:
