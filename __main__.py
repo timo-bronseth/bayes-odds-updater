@@ -36,6 +36,7 @@ def _cast_odds_as_lists_of_floats(args: list) -> list:
 def print_bayes_update(prior_odds: list,
                        likelihood_ratios: list,
                        hypotheses: list,
+                       evidence_name: str,
                        posterior_odds: list,
                        tab_size: int = 20) -> None:
     """Prints the prettified updates to console."""
@@ -96,7 +97,7 @@ def bayes_query() -> tuple:
               fill("List your likelihood ratios for the following hypotheses given the evidence. " +
                    f"That is, if [your hypothesis] is true, how much more likely would you be to " +
                    f"observe [{evidence_name}] compared to if other hypotheses were true?:", 80) +
-              "\n(e.g. '4:1:0.5')" +
+              "\n(e.g. '2:1:0.5')" +
               f"\n\n{hypotheses}" +
               "\n\n" +
               " > ")
